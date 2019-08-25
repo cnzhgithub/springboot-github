@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.themeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>论坛首页</title>
+    <link rel="stylesheet" href="/resources/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="/resources/css/bootstrap-theme.css" th:href="@{/css/bootstrap-theme.css}">
+    <link rel="stylesheet" href="/resources/css/xiaohuo.css" th:href="@{/css/xiaohuo.css}">
+    <script src="/resources/js/jquery-3.4.1.min.js" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script type="application/javascript" href="/resources/js/bootstrap.min.js" th:href="@{/js/bootstrap.min.js}"></script>
+</head>
+<body >
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">小伙社区</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">小伙社区</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="搜索问题">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li th:if="${session.user !=null}">
+                    <a th:href="@{/question(uid=${session.user.id})}" style="float: right">我的问题</a>
+                </li>
+                <li th:if="${session.user !=null}">
+                    <a th:href="@{/publish}" style="float: right">发布</a>
+                </li>
+                <li th:if="${session.user !=null}">
+                    <a th:href="@{/logout}" style="float: right">退出</a>
+                </li>
+                <li class="dropdown" th:if="${session.user !=null}">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span th:text="${session.user.name}"></span>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">消息中心</a></li>
+                        <li><a href="#">个人资料</a></li>
+                        <li><a href="#">退出登录</a></li>
+
+                    </ul>
+                </li>
+                <li th:if="${session.user ==null}"><a href="https://github.com/login/oauth/authorize?client_id=66707622372042ff6d8b&redirect_uri=http://localhost:8080/callback&scope=user&state=1">登录</a></li>
+
+            </ul>
+        </div>
+    </div>
+
+</nav>
+<div class="container-fluid" id="main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span>发现</h2>
+            <hr>
+
+            <div class="media" th:each="question:${pageInfo.list}">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object" th:src="${question.user.avatar_url}" alt="...">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading" th:text="${question.title}">spingboot 论坛项目简介</h4>
+                    <a href="#">点击看详情</a><br/>
+                    <span class="text-desc">两个回复·31次浏览·1小时前</span>
+                </div>
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li th:if="${pageInfo.page !=1}">
+                        <a  th:href="@{/(page=${pageInfo.page-1})}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li th:each="page : ${#numbers.sequence(1,pageInfo.totalPage)}" th:class="${pageInfo.page == page}? 'active' : ''">
+                        <a th:href="@{/(page=${page})}" th:text="${page}"></a>
+                    </li>
+                    <li th:if="${pageInfo.endPge}">
+                        <a th:href="@{/(page=${pageInfo.page+1})}"  aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h3>热门话题</h3>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
